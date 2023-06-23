@@ -8,7 +8,7 @@ namespace falsedecryption
             int randomCipher = rnd.Next(1, 5);
             while (randomCipher == 3)
             {
-                randomCipher = rnd.Next(1, 5);
+                randomCipher = rnd.Next(1, 8);
             }
 
             char[] cipherArray = cipherText.ToLower().ToCharArray();
@@ -34,4 +34,3 @@ namespace falsedecryption
         }
     }
 }
-
