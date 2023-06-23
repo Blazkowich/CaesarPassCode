@@ -16,6 +16,7 @@ namespace displayInputOutput
     class ConsoleEnter
     {
         static string fileDirectory = @"/Users/otar/Desktop/Person/cipher.txt";
+        static string PassCode;
 
         public static void EnterInConsole()
         {
@@ -24,6 +25,7 @@ namespace displayInputOutput
             Console.WriteLine("Welcome. Choose Option:");
             do
             {
+                Console.WriteLine();
                 Console.WriteLine("1. Write");
                 Console.WriteLine("2. Read");
                 Console.WriteLine("3. Exit");
@@ -36,11 +38,11 @@ namespace displayInputOutput
                         switch (choose)
                         {
                             case 1:
-                                Console.WriteLine("Write In Document\nEnter PassCode");
+                                Console.WriteLine("Write In Document");
                                 AllowedEncrypt();
                                 break;
                             case 2:
-                                Console.WriteLine("Read From Document\nEnter Passcode");
+                                Console.WriteLine("Read From Document");
                                 AllowedDecrypt();
                                 break;
                             case 3:
@@ -65,100 +67,81 @@ namespace displayInputOutput
         }
         public static void AllowedEncrypt()
         {
-            string PassCode = Console.ReadLine();
-
-            if (PassCode.ToLower() == "secret")
-            {
-                string SecretText = Console.ReadLine();
-                Display.DisplayEncryptDoc(SecretText, fileDirectory);
-            }
-            else
-            {
-                Console.WriteLine("Passcode is Wrong. Try Again.");
-            }
+            Console.WriteLine("Enter Passcode:");
+            PassCode = Console.ReadLine();
+            Console.WriteLine("Enter Text:");
+            string SecretText = Console.ReadLine();
+            Console.WriteLine(Display.DisplayEncryptDoc(SecretText, fileDirectory));
 
         }
 
         public static void AllowedDecrypt()
         {
-            string PassCode = Console.ReadLine();
+            Console.WriteLine("Enter PassCode For Decrypt:");
+            string PassCodeDecrypt = Console.ReadLine();
 
-            if (PassCode.ToLower() == "secret")
+            if (PassCodeDecrypt.ToLower() == PassCode.ToLower())
             {
-                Display.DisplayDecryptionDoc(fileDirectory);
+                Console.WriteLine(Display.DisplayDecryptionDoc(fileDirectory));
             }
             else
             {
-                Display.DisplayFalseDecryptionDoc(fileDirectory);
+                Console.WriteLine(Display.DisplayFalseDecryptionDoc(fileDirectory));
             }
         }
     }
     class Display
     {
-        #region Display From Console
-        public static void DisplayEncrypted(string plaintxt)
+        public static string DisplayEncrypted(string plaintxt)
         {
-            Console.WriteLine("| Encryption |\nPlain Text: ");
             foreach (var item in plaintxt)
             {
-                Console.Write(item);
+                return item.ToString();
             }
-            Console.WriteLine("\nCipher Text: ");
-
             string encryptedText = Encryption.Encrypt(plaintxt);
-            Console.WriteLine(encryptedText);
-            Console.WriteLine("\n| Encryption Is Done. |\n");
+            return encryptedText;
         }
 
 
-        public static void DisplayDecrypted(string cipherText)
+        public static string DisplayDecrypted(string cipherText)
         {
-            Console.WriteLine("| Decryption |\nPlain Text: ");
             foreach (var item in cipherText)
             {
-                Console.Write(item);
+                return item.ToString();
             }
-            Console.WriteLine("\nCipher Text: ");
             var decryptedText = Decryption.Decrypt(cipherText);
-            Console.WriteLine(decryptedText);
-            Console.WriteLine("\n| Decryption Is Done. |");
+            return decryptedText;
         }
-        #endregion
 
        
-        public static void DisplayEncryptDoc(string text, string directory)
+        public static string DisplayEncryptDoc(string text, string directory)
         {
             string encryptedText = Encryption.Encrypt(text);
             using (StreamWriter sw = new StreamWriter(directory))
             {
                 sw.WriteLine(encryptedText);
             }
-
-            Console.WriteLine($"Input Text:\n{text}");
-            Console.WriteLine();
+            
             using (StreamReader sr = new StreamReader(directory))
             {
-                Console.WriteLine($"Encrypted Text:\n{sr.ReadToEnd()}");
+                return $"\nEncrypted Text:\n{sr.ReadToEnd()}";
             }
-            Console.WriteLine();
         }
 
-        public static void DisplayDecryptionDoc(string directory)
+        public static string DisplayDecryptionDoc(string directory)
         {
             StreamReader sr = new StreamReader(directory);
             string decryptRead = sr.ReadLine();
             string decryptedText = Decryption.Decrypt(decryptRead);
-            Console.WriteLine();
-            Console.WriteLine($"Decrypted Info:\n{decryptedText}");
+            return $"\nDecrypted Info:\n{decryptedText}";
         }
 
-        public static void DisplayFalseDecryptionDoc(string directory)
+        public static string DisplayFalseDecryptionDoc(string directory)
         {
             StreamReader sr = new StreamReader(directory);
             string decryptRead = sr.ReadLine();
             string decryptedText = FalseDecryption.FalseDecrypt(decryptRead);
-            Console.WriteLine();
-            Console.WriteLine($"Decrypted Info:\n{decryptedText}");
+            return $"\nDecrypted Info:\n{decryptedText}";
 
         }
     }
